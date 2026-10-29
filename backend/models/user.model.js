@@ -17,5 +17,12 @@ const userSchema= new mongoose.Schema ({
     },
     assistantName:{
         type:String
-    }
+    },
+    history:[{
+        type:String
+    }]
 },{timestamps})
+
+const User=mongoose.model("User",userSchema)
+
+export default User
