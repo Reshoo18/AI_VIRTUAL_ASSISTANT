@@ -1,3 +1,4 @@
+import genToken from "../config/token.js"
 import User from "../models/user.model.js"
 
 const signUp=async(req,res)=>{
@@ -17,8 +18,9 @@ const signUp=async(req,res)=>{
       const hashedPassword=await bcrypt.hash(password,10)
 
       const user=await User.create({
-        name,email,password:hashedPassword
+        name,password:hashedPassword,email
       })
+      const token=await genToken(user._id)
   } catch (error) {
     
   }
