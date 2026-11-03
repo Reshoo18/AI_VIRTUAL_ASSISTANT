@@ -2,7 +2,7 @@ import genToken from "../config/token.js"
 import User from "../models/user.model.js"
 
 
-const signUp=async(req,res)=>{
+export const signUp=async(req,res)=>{
   try {
       const {name,email,password}=req.body
 
@@ -38,7 +38,7 @@ const signUp=async(req,res)=>{
 }
 
 
-const Login=async(req,res)=>{
+export const Login=async(req,res)=>{
   try {
       const {email,password}=req.body
 
@@ -65,9 +65,20 @@ const Login=async(req,res)=>{
       }
 
       )
-      res.status(201).json(user)
+      res.status(200).json(user)
   } catch (error) {
-      res.status(500).json({message:`signup error ${error}`})
+      res.status(500).json({message:`Login error ${error}`})
   }
+
+}
+
+export const LogOut=async(req,res)=>{
+ try {
+   res.clearCookie("token")
+  return res.status(200).json({message:"logout successfully"})
+  
+ } catch (error) {
+    res.status(500).json({message:`Logout error ${error}`})
+ }
 
 }
