@@ -1,7 +1,7 @@
 import express from "express"
-import { Login, LogOut, signUp } from "../controllers/auth.contrpller"
+import { Login, LogOut, signUp } from "../controllers/auth.contrpller.js"
 
-const authRouter=express.authRouter()
+const authRouter=express.Router()
 authRouter.post("/signup",signUp)
 authRouter.post("/login",Login)
 authRouter.get("/logout",LogOut)

@@ -1,9 +1,11 @@
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bg from "../assets/authBg.png"
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
+import { userDataContext } from "../context/UserContext";
+import axios from "axios";
 
 
 
@@ -11,13 +13,32 @@ import { IoEyeOff } from "react-icons/io5";
 const SignUp = () => {
   const navigate=useNavigate()
   const [showPassword,setShowPassword]=useState(false)
+  const {serverUrl}=useContext(userDataContext)
   const [name,setName]=useState("")
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
+  const [err,setErr]=useState("")
+  const [loading,setLoading]=useState("")
+
+  const handleSignUp=async (e)=>{
+    e.preventDefault()
+    setErr("")
+    setLoading(true)
+    try {
+      let result=await axios.post(`${serverUrl}/api/auth/signup`,{
+        name,email,password},{withCredentials:true})
+        console.log(result)
+        setLoading(false)
+    } catch (error) {
+      console.log(error)
+      setErr(error.response.data.message)
+      setLoading(false)
+    }
+  }
   return (
     <div className='w-full h-[100vh] bg-cover flex justify-center items-center' style={{backgroundImage:`url(${bg})`}}>
-  <form className='w-[90%] h-[600px] max-w-[500px] bg-[#00000062] backdrop-blur shadow-lg shadow-black flex flex-col items-center justify-center gap-[20px] px-[20px]'>
-  <h1 className='text-white text-[30px] font-semibold mb-[30px]'>
+  <form onSubmit={handleSignUp} className='w-[90%] h-[600px] max-w-[500px] bg-[#00000062] backdrop-blur shadow-lg shadow-black flex flex-col items-center justify-center gap-[20px] px-[20px]'>
+  <h1 className='text-white text-[30px] font-semibold mb-[30px]' >
     Register to <span className='text-blue-400'>Virtual Assistant</span>
   </h1>
 
@@ -40,7 +61,8 @@ const SignUp = () => {
 {!showPassword && <IoEye className="absolute top-[20px] right-[20px] text-white cursor-pointer" onClick={()=>{setShowPassword(true)}}/>}
  {showPassword && <IoEyeOff className="absolute top-[20px] right-[20px] text-white cursor-pointer" onClick={()=>{setShowPassword(false)}}/>}
   </div>
-  <button className="min-w-[150px] h-[60px] mt-[30px] text-black bg-white rounded-full test-[19px]">Sign up</button>
+  {err.length>0 && <p className="text-red-500">*{err}</p> }
+  <button type="submit" className="min-w-[150px] h-[60px] mt-[30px] text-black bg-white rounded-full test-[19px]" disabled={loading}>{loading?"Loading ..":"Sign Up"}</button>
     <p className="min-w-[150px] h-[60px]  text-white  rounded-full test-[25px] " onClick={()=>navigate('/signin')}>alreade have an account? <span className="text-blue-300">Sign In</span></p>
 </form>
     </div>
